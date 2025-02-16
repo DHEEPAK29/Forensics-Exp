@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGazer Test</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/webgazer@latest/webgazer.min.js"></script> -->
+    <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+    <style>
+        #gazeDot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            pointer-events: none;
+            display: none; /* Hidden initially */
+        }
+    </style>
+</head>
+<body>
+    <h1>WebGazer Eye Tracking Test</h1>
+    <p>Look around the screen and check the console (F12 → Console) for gaze coordinates.</p>
+    <p>If you see a red dot following your eyes, WebGazer is working!</p>
+
+    <div id="gazeDot"></div> <!-- The dot that follows the gaze -->
+
+    <script>
+        // Initialize WebGazer
+        webgazer.setGazeListener((data, elapsedTime) => {
+            if (data) {
+                console.log(`Gaze Coordinates - X: ${data.x}, Y: ${data.y}, Time: ${elapsedTime}ms`);
+
+                // Move the gaze dot
+                let gazeDot = document.getElementById("gazeDot");
+                gazeDot.style.left = data.x + "px";
+                gazeDot.style.top = data.y + "px";
+                gazeDot.style.display = "block"; // Show the dot
+            }
+        }).begin();
+
+        // Show prediction points for calibration
+        webgazer.showPredictionPoints(true);
+
+        // Ensure camera starts properly
+        webgazer.setCameraConstraints({
+            video: true
+        });
+
+        // Debugging: Check if WebGazer is loaded
+        setTimeout(() => {
+            if (!webgazer.isReady()) {
+                console.error("⚠️ WebGazer is not detecting the eye movement!");
+            } else {
+                console.log("✅ WebGazer is working properly!");
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
